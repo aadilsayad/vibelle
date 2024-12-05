@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from sqlalchemy import create_engine
+from sqlalchemy import TEXT, VARCHAR, Column, LargeBinary, create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 app = FastAPI()
 
@@ -18,6 +19,17 @@ class UserSignup(BaseModel):
     password: str
 
 
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(TEXT, primary_key=True)
+    name = Column(VARCHAR(100))
+    email = Column(VARCHAR(100))
+    password = Column(LargeBinary)
+
+
 @app.post('/signup')
 def signup_user(signup_request: UserSignup):
     # extract the data from request body
@@ -27,3 +39,6 @@ def signup_user(signup_request: UserSignup):
     # check if useer already exists in the db
     # add user to the db
     pass
+
+
+Base.metadata.create_all(engine)
