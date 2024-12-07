@@ -1,5 +1,6 @@
 from fastapi import Depends, HTTPException, APIRouter
 from pydantic_schemas.user_signup import UserSignup
+from pydantic_schemas.user_login import UserLogin
 from models.user import User
 from database import get_db
 from sqlalchemy.orm import Session
@@ -9,11 +10,10 @@ import bcrypt
 router = APIRouter()
 
 
-@router.post('/signup')
+@router.post('/signup', status_code=201)
 def signup_user(signup_request: UserSignup, db: Session=Depends(get_db)):
     # check if user already exists in the db
     existing_user = db.query(User).filter(User.email == signup_request.email).first()
-
     if existing_user:
         raise HTTPException(400, 'User with the same email already exists!')
     
@@ -25,3 +25,19 @@ def signup_user(signup_request: UserSignup, db: Session=Depends(get_db)):
     db.refresh(created_user)
 
     return created_user
+
+
+@router.post('/login')
+def login_user(login_request: UserLogin, db: Session=Depends(get_db)):
+    # check whether user with same email already exists, else show error
+    existing_user = db.query(User).filter(User.email == login_request.email).first()
+    if not existing_user:
+        raise HTTPException(400, 'User with this email does not exist!')
+
+    # then check if password matches, else show error
+    is_password_match = bcrypt.checkpw(password=login_request.password.encode(), hashed_password=existing_user.password)
+    if not is_password_match:
+        raise HTTPException(400, 'Incorrect password!')
+
+    # then return user data
+    return existing_user
