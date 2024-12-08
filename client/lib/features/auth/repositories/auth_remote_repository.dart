@@ -1,9 +1,17 @@
-import 'package:http/http.dart' as http;
-import 'package:client/common/constants/server_constants.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:client/common/constants/server_constants.dart';
 import 'package:client/common/failures/app_failure.dart';
 import 'package:client/features/auth/model/user.dart';
+part 'auth_remote_repository.g.dart';
+
+@riverpod
+AuthRemoteRepository authRemoteRepository(Ref ref) {
+  return AuthRemoteRepository();
+}
 
 class AuthRemoteRepository {
   Future<Either<AppFailure, User>> signup({
