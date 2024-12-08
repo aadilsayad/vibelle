@@ -1,9 +1,9 @@
-import 'package:client/features/auth/repositories/auth_remote_repository.dart';
-import 'package:client/features/auth/view/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:client/common/theme/palette.dart';
 import 'package:client/features/auth/view/widgets/auth_text_field.dart';
 import 'package:client/features/auth/view/widgets/auth_gradient_button.dart';
+import 'package:client/features/auth/repositories/auth_remote_repository.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -56,10 +56,16 @@ class _LoginScreenState extends State<LoginScreen> {
               AuthGradientButton(
                 buttonText: 'Log In',
                 onTap: () async {
-                  await AuthRemoteRepository().login(
+                  final res = await AuthRemoteRepository().login(
                     email: emailController.text,
                     password: passwordController.text,
                   );
+
+                  final val = switch (res) {
+                    fp.Left(value: final l) => l,
+                    fp.Right(value: final r) => r.toString(),
+                  };
+                  print(val);
                 },
               ),
               const SizedBox(height: 20),

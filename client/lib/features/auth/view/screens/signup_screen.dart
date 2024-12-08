@@ -1,9 +1,10 @@
-import 'package:client/features/auth/repositories/auth_remote_repository.dart';
-import 'package:client/features/auth/view/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:client/common/theme/palette.dart';
+import 'package:client/features/auth/view/screens/login_screen.dart';
 import 'package:client/features/auth/view/widgets/auth_text_field.dart';
 import 'package:client/features/auth/view/widgets/auth_gradient_button.dart';
+import 'package:client/features/auth/repositories/auth_remote_repository.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -65,7 +66,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     email: emailController.text,
                     password: passwordController.text,
                   );
-                  print(res);
+
+                  final val = switch (res) {
+                    fp.Left(value: final l) => l,
+                    fp.Right(value: final r) => r.toString(),
+                  };
+                  print(val);
                 },
               ),
               const SizedBox(height: 20),
