@@ -1,3 +1,5 @@
+import 'package:client/features/auth/repositories/auth_remote_repository.dart';
+import 'package:client/features/auth/view/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:client/common/theme/palette.dart';
 import 'package:client/features/auth/view/widgets/auth_text_field.dart';
@@ -53,22 +55,32 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               AuthGradientButton(
                 buttonText: 'Log In',
-                onTap: () {},
+                onTap: () async {
+                  await AuthRemoteRepository().login(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+                },
               ),
               const SizedBox(height: 20),
-              RichText(
-                text: TextSpan(
-                  text: 'Don\'t have an account? ',
-                  style: Theme.of(context).textTheme.titleMedium,
-                  children: const [
-                    TextSpan(
-                      text: 'Sign up',
-                      style: TextStyle(
-                        color: Palette.gradient2,
-                        fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: RichText(
+                  text: TextSpan(
+                    text: 'Don\'t have an account? ',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    children: const [
+                      TextSpan(
+                        text: 'Sign up',
+                        style: TextStyle(
+                          color: Palette.gradient2,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
