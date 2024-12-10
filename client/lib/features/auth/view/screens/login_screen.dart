@@ -1,3 +1,4 @@
+import 'package:client/features/auth/view/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/common/widgets.dart';
@@ -85,18 +86,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       AuthGradientButton(
                         buttonText: 'Log In',
                         onTap: () async {
-                          await ref
-                              .read(authViewModelProvider.notifier)
-                              .loginUser(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              );
+                          if (formKey.currentState!.validate()) {
+                            await ref
+                                .read(authViewModelProvider.notifier)
+                                .loginUser(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                );
+                          }
                         },
                       ),
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (ctx) => const SignupScreen(),
+                            ),
+                          );
                         },
                         child: RichText(
                           text: TextSpan(

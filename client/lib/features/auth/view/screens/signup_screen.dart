@@ -109,7 +109,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (ctx) => const LoginScreen(),
