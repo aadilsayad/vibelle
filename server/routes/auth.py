@@ -6,6 +6,7 @@ from database import get_db
 from sqlalchemy.orm import Session
 import uuid
 import bcrypt
+import jwt
 
 router = APIRouter()
 
@@ -39,5 +40,6 @@ def login_user(login_request: UserLogin, db: Session=Depends(get_db)):
     if not is_password_match:
         raise HTTPException(400, 'Incorrect password!')
 
-    # then return user data
-    return existing_user
+    # then return user data and access token
+    access_token = jwt.encode(payload={'id': existing_user.id}, key='secret_key')
+    return {'access_token': access_token, 'user': existing_user}

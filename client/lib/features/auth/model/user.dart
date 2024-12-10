@@ -4,22 +4,26 @@ class User {
   final String id;
   final String name;
   final String email;
+  final String accessToken;
 
   const User({
     required this.id,
     required this.name,
     required this.email,
+    required this.accessToken,
   });
 
   User copyWith({
     String? id,
     String? name,
     String? email,
+    String? accessToken,
   }) {
     return User(
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
+      accessToken: accessToken ?? this.accessToken,
     );
   }
 
@@ -28,6 +32,7 @@ class User {
       'id': id,
       'name': name,
       'email': email,
+      'access_token': accessToken,
     };
   }
 
@@ -36,6 +41,7 @@ class User {
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       email: map['email'] ?? '',
+      accessToken: map['access_token'] ?? '',
     );
   }
 
@@ -46,6 +52,6 @@ class User {
 
   @override
   String toString() {
-    return 'User{id: $id, name: $name, email: $email}';
+    return 'User{id: $id, name: $name, email: $email, accessToken: $accessToken}';
   }
 }
