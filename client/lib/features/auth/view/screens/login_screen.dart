@@ -1,4 +1,5 @@
 import 'package:client/features/auth/view/screens/signup_screen.dart';
+import 'package:client/features/home/view/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/common/widgets.dart';
@@ -29,20 +30,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoading = ref.watch(authViewModelProvider)?.isLoading == true;
+    final bool isLoading = ref.watch(
+      authViewModelProvider.select((val) => val?.isLoading == true),
+    );
 
     ref.listen(
       authViewModelProvider,
       (_, next) {
         next?.when(
           data: (data) {
-            // Navigate to home screen
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (ctx) => const LoginScreen(),
-            //   ),
-            // );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => const HomeScreen(),
+              ),
+            );
           },
           error: (error, st) {
             showSnackBar(context, error.toString());

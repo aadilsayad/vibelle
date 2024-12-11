@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException, APIRouter
+from middlewares.auth_middleware import validate_auth_token
 from pydantic_schemas.user_signup import UserSignup
 from pydantic_schemas.user_login import UserLogin
 from models.user import User
@@ -43,3 +44,12 @@ def login_user(login_request: UserLogin, db: Session=Depends(get_db)):
     # then return user data and access token
     access_token = jwt.encode(payload={'id': existing_user.id}, key='secret_key')
     return {'access_token': access_token, 'user': existing_user}
+
+
+@router.get('/')
+def get_current_user(db: Session=Depends(get_db), auth_data=Depends(validate_auth_token)):
+    user = db.query(User).filter(User.id == auth_data['user_id']).first()
+    if not user:
+        raise HTTPException(404, 'User not found.')
+    
+    return user
