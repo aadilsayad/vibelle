@@ -1,5 +1,5 @@
 import 'package:client/features/auth/view/screens/signup_screen.dart';
-import 'package:client/features/home/view/screens/home_screen.dart';
+import 'package:client/features/home/view/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/common/widgets.dart';
@@ -42,7 +42,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (ctx) => const HomeScreen(),
+                builder: (ctx) => const MainScreen(),
               ),
             );
           },
