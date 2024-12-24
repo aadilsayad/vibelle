@@ -25,7 +25,7 @@ final initGetTrendingTracksProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef InitGetTrendingTracksRef = AutoDisposeFutureProviderRef<List<Track>>;
-String _$mainViewModelHash() => r'c2c717b05b9a4d30ba741a2934f728242ae1b2d8';
+String _$mainViewModelHash() => r'ed36f2fdc8dace7a446e5ada6657b621148705de';
 
 /// See also [MainViewModel].
 @ProviderFor(MainViewModel)

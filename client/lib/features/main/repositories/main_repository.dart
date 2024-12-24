@@ -50,4 +50,38 @@ class MainRepository {
       );
     }
   }
+
+  Future<Either<AppFailure, String>> getTrackStreamUrl({
+    required String token,
+    required String trackId,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ServerConstants.serverURL}/music/tracks/stream'),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token,
+        },
+        body: jsonEncode(
+          {'track_id': trackId},
+        ),
+      );
+      final responseBodyMap = jsonDecode(response.body);
+      if (response.statusCode != 200) {
+        return Left(
+          AppFailure(
+            responseBodyMap['detail'],
+          ),
+        );
+      }
+
+      return Right(responseBodyMap['stream_url'] as String);
+    } catch (e) {
+      return Left(
+        AppFailure(
+          e.toString(),
+        ),
+      );
+    }
+  }
 }

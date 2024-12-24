@@ -1,6 +1,8 @@
+import 'package:client/common/providers/current_user_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/common/widgets.dart';
+import 'package:client/common/providers/current_track_notifier.dart';
 import 'package:client/features/main/viewmodel/main_viewmodel.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -32,36 +34,43 @@ class HomeScreen extends ConsumerWidget {
                       itemCount: tracks.length,
                       itemBuilder: (context, index) {
                         final track = tracks[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 150,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(track.artwork_url),
-                                    fit: BoxFit.cover,
+                        return GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(currentTrackNotifierProvider.notifier)
+                                .updateTrackPlaybackState(track);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(track.artwork_url),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(7),
                                   ),
-                                  borderRadius: BorderRadius.circular(7),
                                 ),
-                              ),
-                              const SizedBox(height: 5),
-                              SizedBox(
-                                width: 150,
-                                child: Text(
-                                  track.title,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    overflow: TextOverflow.ellipsis,
+                                const SizedBox(height: 5),
+                                SizedBox(
+                                  width: 150,
+                                  child: Text(
+                                    track.title,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    maxLines: 1,
                                   ),
-                                  maxLines: 1,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },

@@ -1,3 +1,4 @@
+import 'package:client/features/main/view/widgets/music_slab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/common/theme/palette.dart';
@@ -23,7 +24,16 @@ class _HomeScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[selectedIndex],
+      body: Stack(
+        children: [
+          screens[selectedIndex],
+          const Positioned(
+            bottom: 0,
+            left: 8,
+            child: MusicSlab(),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: (value) {

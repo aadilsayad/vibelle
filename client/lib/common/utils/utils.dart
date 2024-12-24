@@ -9,3 +9,7 @@ void showSnackBar(BuildContext context, String content) {
       ),
     );
 }
+
+Color hexToColor(String hexCode) {
+  return Color(int.parse(hexCode, radix: 16) + 0xFF000000);
+}

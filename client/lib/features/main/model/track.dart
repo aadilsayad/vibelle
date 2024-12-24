@@ -6,16 +6,16 @@ class Track {
   final String title;
   final String artist;
   final String artwork_url;
-  final String song_url;
+  String? song_url;
   final String primary_color;
   final String secondary_color;
 
-  const Track({
+  Track({
     required this.id,
     required this.title,
     required this.artist,
     required this.artwork_url,
-    required this.song_url,
+    this.song_url,
     required this.primary_color,
     required this.secondary_color,
   });
@@ -42,13 +42,13 @@ class Track {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': this.id,
-      'title': this.title,
-      'artist': this.artist,
-      'artwork_url': this.artwork_url,
-      'song_url': this.song_url,
-      'primary_color': this.primary_color,
-      'secondary_color': this.secondary_color,
+      'id': id,
+      'title': title,
+      'artist': artist,
+      'artwork_url': artwork_url,
+      'song_url': song_url,
+      'primary_color': primary_color,
+      'secondary_color': secondary_color,
     };
   }
 

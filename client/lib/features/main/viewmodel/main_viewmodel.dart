@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
-
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -30,5 +28,18 @@ class MainViewModel extends _$MainViewModel {
   AsyncValue? build() {
     _mainRepository = ref.watch(mainRepositoryProvider);
     return null;
+  }
+
+  Future<String> loadStreamUrl(String trackId) async {
+    final token = ref.watch(currentUserNotifierProvider)!.accessToken;
+    final response =
+        await _mainRepository.getTrackStreamUrl(token: token, trackId: trackId);
+
+    final switchCase = switch (response) {
+      Left(value: final l) => throw l.message,
+      Right(value: final r) => r,
+    };
+
+    return switchCase;
   }
 }
