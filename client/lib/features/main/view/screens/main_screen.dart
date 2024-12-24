@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/common/theme/palette.dart';
-import 'package:client/features/home/view/screens/home_screen.dart';
-import 'package:client/features/home/view/screens/search_screen.dart';
-import 'package:client/features/home/view/screens/library_screen.dart';
+import 'package:client/features/main/view/screens/home_screen.dart';
+import 'package:client/features/main/view/screens/search_screen.dart';
+import 'package:client/features/main/view/screens/library_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});

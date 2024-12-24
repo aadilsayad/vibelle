@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/common/theme/theme.dart';
 import 'package:client/features/auth/view/screens/signup_screen.dart';
-import 'package:client/features/home/view/screens/main_screen.dart';
+import 'package:client/features/main/view/screens/main_screen.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:client/common/providers/current_user_notifier.dart';
 

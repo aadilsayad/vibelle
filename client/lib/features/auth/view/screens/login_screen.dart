@@ -1,5 +1,3 @@
-import 'package:client/features/auth/view/screens/signup_screen.dart';
-import 'package:client/features/home/view/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/common/widgets.dart';
@@ -8,6 +6,8 @@ import 'package:client/common/theme/palette.dart';
 import 'package:client/features/auth/view/widgets/auth_text_field.dart';
 import 'package:client/features/auth/view/widgets/auth_gradient_button.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:client/features/auth/view/screens/signup_screen.dart';
+import 'package:client/features/main/view/screens/main_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
