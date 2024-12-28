@@ -6,7 +6,7 @@ part 'current_track_notifier.g.dart';
 
 @riverpod
 class CurrentTrackNotifier extends _$CurrentTrackNotifier {
-  late AudioPlayer? audioPlayer;
+  AudioPlayer? audioPlayer;
   bool isPlaying = false;
   @override
   Track? build() {
@@ -14,6 +14,8 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
   }
 
   void updateTrackPlaybackState(Track track) async {
+    await audioPlayer?.stop();
+
     audioPlayer = AudioPlayer();
     final trackStreamUrl =
         await ref.watch(mainViewModelProvider.notifier).loadStreamUrl(track.id);
@@ -23,7 +25,16 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
     );
 
     await audioPlayer!.setAudioSource(audioSource);
-    audioPlayer!.stop();
+
+    audioPlayer!.playerStateStream.listen((playerState) {
+      if (playerState.processingState == ProcessingState.completed) {
+        audioPlayer!.seek(Duration.zero);
+        audioPlayer!.pause();
+        isPlaying = false;
+        state = state?.copyWith(primary_color: state?.primary_color);
+      }
+    });
+
     audioPlayer!.play();
     isPlaying = true;
     state = track;

@@ -44,11 +44,3 @@ def get_stream_url(stream_request: StreamRequest, auth_data=Depends(validate_aut
         raise HTTPException(404, 'Track not found!')
     stream_url = stream_data['data']
     return {'stream_url': stream_url}
-
-
-# playlists/by_permalink/:handle/:slug
-# CryptoMindset /playlist/ funky-hip-hop-and-rap-47454
-
-# So I just confirmed that all Audius playlists have a permalink property of the form: "/{artist-handle}/playlist/{playlist-slug}"
-# For example: "/CryptoMindset/playlist/funky-hip-hop-and-rap-47454"
-# How do I extract the user-handle and playlist-slug values from the permalink now given that the leading '/' and the string '/playlist/' are the only separators between them?
