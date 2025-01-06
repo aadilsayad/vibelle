@@ -25,8 +25,7 @@ def get_trending_tracks(auth_data=Depends(validate_auth_token)):
                 'title': track['title'],
                 'artist': track['user']['name'],
                 'artwork_url': track['artwork']['150x150'],
-                'song_url': track['permalink'],
-                'primary_color': 'FFFFFF',
+                'primary_color': '5360FD',
                 'secondary_color': '000000',
             }
         )

@@ -6,7 +6,6 @@ class Track {
   final String title;
   final String artist;
   final String artwork_url;
-  String? song_url;
   final String primary_color;
   final String secondary_color;
 
@@ -15,7 +14,6 @@ class Track {
     required this.title,
     required this.artist,
     required this.artwork_url,
-    this.song_url,
     required this.primary_color,
     required this.secondary_color,
   });
@@ -25,7 +23,6 @@ class Track {
     String? title,
     String? artist,
     String? artwork_url,
-    String? song_url,
     String? primary_color,
     String? secondary_color,
   }) {
@@ -34,7 +31,6 @@ class Track {
       title: title ?? this.title,
       artist: artist ?? this.artist,
       artwork_url: artwork_url ?? this.artwork_url,
-      song_url: song_url ?? this.song_url,
       primary_color: primary_color ?? this.primary_color,
       secondary_color: secondary_color ?? this.secondary_color,
     );
@@ -46,7 +42,6 @@ class Track {
       'title': title,
       'artist': artist,
       'artwork_url': artwork_url,
-      'song_url': song_url,
       'primary_color': primary_color,
       'secondary_color': secondary_color,
     };
@@ -58,7 +53,6 @@ class Track {
       title: map['title'] ?? '',
       artist: map['artist'] ?? '',
       artwork_url: map['artwork_url'] ?? '',
-      song_url: map['song_url'] ?? '',
       primary_color: map['primary_color'] ?? '',
       secondary_color: map['secondary_color'] ?? '',
     );
@@ -71,6 +65,6 @@ class Track {
 
   @override
   String toString() {
-    return 'Track{id: $id, title: $title, artist: $artist, artwork_url: $artwork_url, song_url: $song_url, primary_color: $primary_color, secondary_color: $secondary_color}';
+    return 'Track{id: $id, title: $title, artist: $artist, artwork_url: $artwork_url, primary_color: $primary_color, secondary_color: $secondary_color}';
   }
 }
