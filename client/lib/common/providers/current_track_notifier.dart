@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_public_notifier_properties
 import 'package:just_audio/just_audio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:client/features/main/model/track.dart';
@@ -48,5 +49,14 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
     }
     isPlaying = !isPlaying;
     state = state?.copyWith(primary_color: state?.primary_color);
+  }
+
+  void seekToPosition(double position) {
+    audioPlayer?.seek(
+      Duration(
+        milliseconds:
+            (position * audioPlayer!.duration!.inMilliseconds).toInt(),
+      ),
+    );
   }
 }

@@ -11,7 +11,13 @@ class MusicPlayerScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    bool isDragging = false;
+    double userSeekValue = 0.0;
+
     final currentTrack = ref.watch(currentTrackNotifierProvider);
+    final currentTrackNotifier =
+        ref.read(currentTrackNotifierProvider.notifier);
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -128,48 +134,118 @@ class MusicPlayerScreen extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Column(
-                    children: [
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: Palette.whiteColor,
-                          inactiveTrackColor:
-                              Palette.whiteColor.withOpacity(0.12),
-                          thumbColor: Palette.whiteColor,
-                          trackHeight: 4,
-                          trackShape: CustomRoundedRectSliderTrackShape(),
-                          thumbShape: const RoundSliderThumbShape(
-                            enabledThumbRadius: 6,
-                          ),
-                          overlayShape: SliderComponentShape.noOverlay,
-                        ),
-                        child: Slider(
-                          value: 0.5,
-                          onChanged: (val) {},
-                        ),
-                      ),
-                      const Row(
-                        children: [
-                          Text(
-                            '0:05',
-                            style: TextStyle(
-                              color: Palette.subtitleText,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            '1:00',
-                            style: TextStyle(
-                              color: Palette.subtitleText,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  StreamBuilder(
+                    stream: currentTrackNotifier.audioPlayer?.positionStream,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<Duration> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox();
+                      }
+
+                      final position = snapshot.data;
+                      final duration =
+                          currentTrackNotifier.audioPlayer?.duration;
+                      double playbackProgress = 0.0;
+
+                      if (position != null && duration != null) {
+                        playbackProgress = isDragging
+                            ? userSeekValue
+                            : position.inMilliseconds / duration.inMilliseconds;
+                      }
+
+                      return StatefulBuilder(
+                        builder: (BuildContext context,
+                            void Function(void Function()) setState) {
+                          Duration currentPosition;
+                          if (duration != null && isDragging) {
+                            double currentValue = currentTrackNotifier.isPlaying
+                                ? userSeekValue
+                                : playbackProgress;
+                            int positionInMilliseconds =
+                                (currentValue * duration.inMilliseconds)
+                                    .toInt();
+                            currentPosition =
+                                Duration(milliseconds: positionInMilliseconds);
+                          } else {
+                            currentPosition = position ?? Duration.zero;
+                          }
+
+                          int positionMinutes = currentPosition.inMinutes;
+                          int positionSeconds = currentPosition.inSeconds % 60;
+                          int durationMinutes = duration?.inMinutes ?? 0;
+                          int durationSeconds = (duration?.inSeconds ?? 0) % 60;
+                          return Column(
+                            children: [
+                              SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  activeTrackColor: Palette.whiteColor,
+                                  inactiveTrackColor:
+                                      Palette.whiteColor.withOpacity(0.12),
+                                  thumbColor: Palette.whiteColor,
+                                  trackHeight: 4,
+                                  trackShape:
+                                      CustomRoundedRectSliderTrackShape(),
+                                  thumbShape: const RoundSliderThumbShape(
+                                    enabledThumbRadius: 6,
+                                  ),
+                                  overlayShape: SliderComponentShape.noOverlay,
+                                ),
+                                child: Slider(
+                                    value: playbackProgress,
+                                    min: 0,
+                                    max: 1,
+                                    onChangeStart: (val) {
+                                      setState(() {
+                                        isDragging = true;
+                                        if (currentTrackNotifier.isPlaying) {
+                                          userSeekValue = val;
+                                        } else {
+                                          playbackProgress = val;
+                                        }
+                                      });
+                                    },
+                                    onChanged: (val) {
+                                      setState(() {
+                                        if (currentTrackNotifier.isPlaying) {
+                                          userSeekValue = val;
+                                        } else {
+                                          playbackProgress = val;
+                                        }
+                                      });
+                                    },
+                                    onChangeEnd: (val) {
+                                      setState(() {
+                                        isDragging = false;
+                                      });
+                                      currentTrackNotifier.seekToPosition(val);
+                                    }),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '$positionMinutes:${positionSeconds < 10 ? '0$positionSeconds' : positionSeconds}',
+                                    style: const TextStyle(
+                                      color: Palette.subtitleText,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    '$durationMinutes:${durationSeconds < 10 ? '0$durationSeconds' : durationSeconds}',
+                                    style: const TextStyle(
+                                      color: Palette.subtitleText,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                   const SizedBox(height: 15),
                   Row(
@@ -192,9 +268,11 @@ class MusicPlayerScreen extends ConsumerWidget {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.play_circle_filled,
+                        onPressed: currentTrackNotifier.togglePlaybackState,
+                        icon: Icon(
+                          currentTrackNotifier.isPlaying
+                              ? Icons.pause_circle_filled
+                              : Icons.play_circle_filled,
                           size: 80,
                           color: Palette.whiteColor,
                         ),
