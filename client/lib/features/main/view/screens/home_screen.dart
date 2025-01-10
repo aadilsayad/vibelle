@@ -36,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
                           onTap: () {
                             ref
                                 .read(currentTrackNotifierProvider.notifier)
-                                .updateTrackPlaybackState(track);
+                                .playTrack(track);
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(left: 16),
@@ -107,7 +107,12 @@ class HomeScreen extends ConsumerWidget {
                           onTap: () {
                             ref
                                 .read(currentTrackNotifierProvider.notifier)
-                                .updateTrackPlaybackState(playlist.tracks[0]);
+                                .setPlaylist(playlist.tracks);
+                            print(
+                                '\n\nPlaylist length is: ${playlist.tracks.length}\n\n');
+                            ref
+                                .read(currentTrackNotifierProvider.notifier)
+                                .playTrack(playlist.tracks[0]);
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(left: 16),
