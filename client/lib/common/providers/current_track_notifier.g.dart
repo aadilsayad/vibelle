@@ -7,7 +7,7 @@ part of 'current_track_notifier.dart';
 // **************************************************************************
 
 String _$currentTrackNotifierHash() =>
-    r'546734168a4a7a046bd8e0491c7a064db29717b5';
+    r'2a097f605ed723b1bcce96ccad30eee18a1149a8';
 
 /// See also [CurrentTrackNotifier].
 @ProviderFor(CurrentTrackNotifier)

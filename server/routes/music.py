@@ -16,9 +16,10 @@ def get_trending_tracks(auth_data=Depends(validate_auth_token)):
     }
 
     api_response = requests.get(f'{host}/v1/tracks/trending', params={}, headers = headers)
-    trending_tracks_detailed = api_response.json()
+    trending_tracks = api_response.json()
     trending_tracks_compact = []
-    for track in trending_tracks_detailed['data']:
+    trending_tracks_detailed = trending_tracks['data']
+    for track in trending_tracks_detailed:
         trending_tracks_compact.append(
             {
                 'id': track['id'],
@@ -43,3 +44,35 @@ def get_stream_url(stream_request: StreamRequest, auth_data=Depends(validate_aut
         raise HTTPException(404, 'Track not found!')
     stream_url = stream_data['data']
     return {'stream_url': stream_url}
+
+
+@router.get('/playlists/trending')
+def get_trending_playlists(auth_data=Depends(validate_auth_token)):
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    api_response = requests.get(f'{host}/v1/full/playlists/trending', params={'limit': 20, 'time': 'year'}, headers = headers)
+    trending_playlists = api_response.json()
+    trending_playlists_detailed = trending_playlists['data']
+    trending_playlists_compact = []
+    for playlist in trending_playlists_detailed:
+        trending_playlists_compact.append(
+            {
+                'id': playlist['id'],
+                'title': playlist['playlist_name'],
+                'artist': playlist['user']['name'],
+                'artwork_url': playlist['artwork']['480x480'],
+                'tracks': [
+                    {
+                        'id': track['id'],
+                        'title': track['title'],
+                        'artist': track['user']['name'],
+                        'artwork_url': track['artwork']['480x480'],
+                        'primary_color': '5360FD',
+                        'secondary_color': '000000'
+                    } for track in playlist['tracks']
+                ]
+            }
+        )
+    return trending_playlists_compact
