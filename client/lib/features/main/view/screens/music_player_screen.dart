@@ -1,10 +1,11 @@
-import 'package:client/features/main/view/widgets/custom_rounded_rect_slider_track_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marquee/marquee.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:client/common/utils/utils.dart';
 import 'package:client/common/theme/palette.dart';
 import 'package:client/common/providers/current_track_notifier.dart';
+import 'package:client/features/main/view/widgets/custom_rounded_rect_slider_track_shape.dart';
 
 class MusicPlayerScreen extends ConsumerWidget {
   const MusicPlayerScreen({super.key});
@@ -252,15 +253,25 @@ class MusicPlayerScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          'assets/images/shuffle_unfilled.png',
-                          color: Palette.whiteColor,
-                          width: 30,
-                        ),
+                        onPressed: () {
+                          currentTrackNotifier.toggleShuffle();
+                        },
+                        icon: currentTrackNotifier.isShuffled
+                            ? Image.asset(
+                                'assets/images/shuffle_filled.png',
+                                color: Palette.gradient2,
+                                width: 30,
+                              )
+                            : Image.asset(
+                                'assets/images/shuffle_unfilled.png',
+                                color: Palette.whiteColor,
+                                width: 30,
+                              ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          currentTrackNotifier.skipToPrevious();
+                        },
                         icon: const Icon(
                           Icons.skip_previous,
                           size: 48,
@@ -278,7 +289,9 @@ class MusicPlayerScreen extends ConsumerWidget {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          currentTrackNotifier.skipToNext();
+                        },
                         icon: const Icon(
                           Icons.skip_next,
                           size: 48,
@@ -286,12 +299,26 @@ class MusicPlayerScreen extends ConsumerWidget {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          'assets/images/repeat_unfilled.png',
-                          color: Palette.whiteColor,
-                          width: 30,
-                        ),
+                        onPressed: () {
+                          currentTrackNotifier.toggleRepeat();
+                        },
+                        icon: switch (currentTrackNotifier.loopMode) {
+                          LoopMode.off => Image.asset(
+                              'assets/images/repeat_unfilled.png',
+                              color: Palette.whiteColor,
+                              width: 30,
+                            ),
+                          LoopMode.all => Image.asset(
+                              'assets/images/repeat_filled.png',
+                              color: Palette.gradient2,
+                              width: 30,
+                            ),
+                          LoopMode.one => Image.asset(
+                              'assets/images/repeat_one_filled.png',
+                              color: Palette.gradient2,
+                              width: 30,
+                            ),
+                        },
                       ),
                     ],
                   ),

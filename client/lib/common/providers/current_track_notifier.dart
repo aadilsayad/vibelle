@@ -9,32 +9,91 @@ part 'current_track_notifier.g.dart';
 class CurrentTrackNotifier extends _$CurrentTrackNotifier {
   AudioPlayer? audioPlayer;
   bool isPlaying = false;
+  bool isShuffled = false;
+  LoopMode loopMode = LoopMode.off;
+  List<Track> trackList = [];
+  late ConcatenatingAudioSource? playlist;
+
   @override
   Track? build() {
-    return null;
-  }
-
-  void updateTrackPlaybackState(Track track) async {
-    await audioPlayer?.stop();
-
     audioPlayer = AudioPlayer();
-    final trackStreamUrl =
-        await ref.watch(mainViewModelProvider.notifier).loadStreamUrl(track.id);
+    playlist = ConcatenatingAudioSource(children: []);
 
-    final audioSource = AudioSource.uri(
-      Uri.parse(trackStreamUrl),
-    );
-
-    await audioPlayer!.setAudioSource(audioSource);
-
+    // Listen for track completion to handle auto-play
     audioPlayer!.playerStateStream.listen((playerState) {
       if (playerState.processingState == ProcessingState.completed) {
-        audioPlayer!.seek(Duration.zero);
-        audioPlayer!.pause();
-        isPlaying = false;
+        if (!audioPlayer!.hasNext) {
+          // If no next track, reset current track
+          audioPlayer!.seek(Duration.zero);
+          audioPlayer!.pause();
+          isPlaying = false;
+        }
+        // Auto-play next track is handled automatically by JustAudio
         state = state?.copyWith(primary_color: state?.primary_color);
       }
     });
+
+    // Listen for track changes to update state
+    audioPlayer!.currentIndexStream.listen((index) {
+      if (index != null && index < trackList.length) {
+        state = trackList[index];
+      }
+    });
+
+    return null;
+  }
+
+  void setPlaylist(List<Track> tracks) async {
+    if (isShuffled) {
+      toggleShuffle();
+    }
+    if (loopMode != LoopMode.off) {
+      loopMode = LoopMode.off;
+      audioPlayer?.setLoopMode(LoopMode.off);
+    }
+
+    trackList = tracks;
+    final audioSources = await Future.wait(
+      tracks.map((track) async {
+        final trackStreamUrl = await ref
+            .watch(mainViewModelProvider.notifier)
+            .loadStreamUrl(track.id);
+        return AudioSource.uri(Uri.parse(trackStreamUrl));
+      }),
+    );
+
+    playlist = ConcatenatingAudioSource(children: audioSources);
+    await audioPlayer!.setAudioSource(playlist!);
+    state = state?.copyWith(primary_color: state?.primary_color);
+  }
+
+  void playTrack(Track track) async {
+    if (isShuffled) {
+      toggleShuffle();
+    }
+    if (loopMode != LoopMode.off) {
+      loopMode = LoopMode.off;
+      audioPlayer?.setLoopMode(LoopMode.off);
+    }
+
+    if (trackList.isEmpty || !trackList.contains(track)) {
+      // Single track playback (old behavior)
+      await audioPlayer?.stop();
+      final trackStreamUrl = await ref
+          .watch(mainViewModelProvider.notifier)
+          .loadStreamUrl(track.id);
+
+      playlist = ConcatenatingAudioSource(
+        children: [AudioSource.uri(Uri.parse(trackStreamUrl))],
+      );
+      trackList = [track];
+
+      await audioPlayer!.setAudioSource(playlist!);
+    } else {
+      // Play track from existing playlist
+      final trackIndex = trackList.indexOf(track);
+      await audioPlayer!.seek(Duration.zero, index: trackIndex);
+    }
 
     audioPlayer!.play();
     isPlaying = true;
@@ -58,5 +117,39 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
             (position * audioPlayer!.duration!.inMilliseconds).toInt(),
       ),
     );
+  }
+
+  void skipToNext() {
+    if (audioPlayer?.hasNext ?? false) {
+      audioPlayer?.seekToNext();
+    }
+  }
+
+  void skipToPrevious() {
+    if (audioPlayer?.hasPrevious ?? false) {
+      audioPlayer?.seekToPrevious();
+    }
+  }
+
+  void toggleShuffle() {
+    if (isShuffled) {
+      audioPlayer?.setShuffleModeEnabled(false);
+    } else {
+      audioPlayer?.setShuffleModeEnabled(true);
+    }
+    isShuffled = !isShuffled;
+    state = state?.copyWith(primary_color: state?.primary_color);
+  }
+
+  void toggleRepeat() {
+    if (loopMode == LoopMode.off) {
+      loopMode = LoopMode.all;
+    } else if (loopMode == LoopMode.all) {
+      loopMode = LoopMode.one;
+    } else {
+      loopMode = LoopMode.off;
+    }
+    audioPlayer?.setLoopMode(loopMode);
+    state = state?.copyWith(primary_color: state?.primary_color);
   }
 }
