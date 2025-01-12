@@ -18,7 +18,7 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
   Track? build() {
     audioPlayer = AudioPlayer();
     playlist = ConcatenatingAudioSource(children: []);
-
+    
     // Listen for track completion to handle auto-play
     audioPlayer!.playerStateStream.listen((playerState) {
       if (playerState.processingState == ProcessingState.completed) {
@@ -51,6 +51,7 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
       loopMode = LoopMode.off;
       audioPlayer?.setLoopMode(LoopMode.off);
     }
+    state = state?.copyWith(primary_color: state?.primary_color);
 
     trackList = tracks;
     final audioSources = await Future.wait(
@@ -68,16 +69,17 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
   }
 
   void playTrack(Track track) async {
-    if (isShuffled) {
-      toggleShuffle();
-    }
-    if (loopMode != LoopMode.off) {
-      loopMode = LoopMode.off;
-      audioPlayer?.setLoopMode(LoopMode.off);
-    }
-
     if (trackList.isEmpty || !trackList.contains(track)) {
-      // Single track playback (old behavior)
+      // Single track playback
+      if (isShuffled) {
+        toggleShuffle();
+      }
+      if (loopMode != LoopMode.off) {
+        loopMode = LoopMode.off;
+        audioPlayer?.setLoopMode(LoopMode.off);
+      }
+      state = state?.copyWith(primary_color: state?.primary_color);
+
       await audioPlayer?.stop();
       final trackStreamUrl = await ref
           .watch(mainViewModelProvider.notifier)
