@@ -18,7 +18,7 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
   Track? build() {
     audioPlayer = AudioPlayer();
     playlist = ConcatenatingAudioSource(children: []);
-
+    
     // Listen for track completion to handle auto-play
     audioPlayer!.playerStateStream.listen((playerState) {
       if (playerState.processingState == ProcessingState.completed) {
