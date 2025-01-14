@@ -39,7 +39,7 @@ class Playlist {
       'title': title,
       'artist': artist,
       'artwork_url': artwork_url,
-      'tracks': tracks,
+      'tracks': tracks.map((track) => track.toMap()).toList(),
     };
   }
 

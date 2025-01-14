@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:client/common/widgets.dart';
+import 'package:client/common/widgets/widgets.dart';
 import 'package:client/common/utils/utils.dart';
 import 'package:client/common/theme/palette.dart';
 import 'package:client/features/auth/view/widgets/auth_text_field.dart';

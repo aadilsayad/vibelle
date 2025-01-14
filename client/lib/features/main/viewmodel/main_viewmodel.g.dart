@@ -7,7 +7,7 @@ part of 'main_viewmodel.dart';
 // **************************************************************************
 
 String _$initGetTrendingTracksHash() =>
-    r'f5d5847ff9cfe92796f4928064d623dcc8e8c10e';
+    r'636891be5bb1b09d51ce8243b1fcdecac00653b2';
 
 /// See also [initGetTrendingTracks].
 @ProviderFor(initGetTrendingTracks)
@@ -26,7 +26,7 @@ final initGetTrendingTracksProvider =
 // ignore: unused_element
 typedef InitGetTrendingTracksRef = AutoDisposeFutureProviderRef<List<Track>>;
 String _$initGetTrendingPlaylistsHash() =>
-    r'1436bd448f234b0308919d0aa2a8a04d5a63e8f0';
+    r'013f42527b270e7570186ae194012db3e863751f';
 
 /// See also [initGetTrendingPlaylists].
 @ProviderFor(initGetTrendingPlaylists)
@@ -45,7 +45,7 @@ final initGetTrendingPlaylistsProvider =
 // ignore: unused_element
 typedef InitGetTrendingPlaylistsRef
     = AutoDisposeFutureProviderRef<List<Playlist>>;
-String _$mainViewModelHash() => r'4ed6550096366f233021e520145888e940d0eaf5';
+String _$mainViewModelHash() => r'95fe4d472ecd4d4ac5b5cb98d51cedc28b0cba0c';
 
 /// See also [MainViewModel].
 @ProviderFor(MainViewModel)

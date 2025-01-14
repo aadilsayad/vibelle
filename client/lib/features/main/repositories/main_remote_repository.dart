@@ -10,11 +10,11 @@ import 'package:client/features/main/model/playlist.dart';
 part 'main_remote_repository.g.dart';
 
 @riverpod
-MainRepository mainRepository(Ref ref) {
-  return MainRepository();
+MainRemoteRepository mainRemoteRepository(Ref ref) {
+  return MainRemoteRepository();
 }
 
-class MainRepository {
+class MainRemoteRepository {
   Future<Either<AppFailure, List<Track>>> getTrendingTracks(
       {required String token}) async {
     try {

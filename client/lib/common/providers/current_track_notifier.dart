@@ -2,6 +2,7 @@
 import 'package:just_audio/just_audio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:client/features/main/model/track.dart';
+import 'package:client/features/main/model/playlist.dart';
 import 'package:client/features/main/viewmodel/main_viewmodel.dart';
 part 'current_track_notifier.g.dart';
 
@@ -13,12 +14,13 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
   LoopMode loopMode = LoopMode.off;
   List<Track> trackList = [];
   late ConcatenatingAudioSource? playlist;
+  Playlist? currentPlaylist;
 
   @override
   Track? build() {
     audioPlayer = AudioPlayer();
     playlist = ConcatenatingAudioSource(children: []);
-    
+
     // Listen for track completion to handle auto-play
     audioPlayer!.playerStateStream.listen((playerState) {
       if (playerState.processingState == ProcessingState.completed) {
@@ -37,13 +39,19 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
     audioPlayer!.currentIndexStream.listen((index) {
       if (index != null && index < trackList.length) {
         state = trackList[index];
+        if (currentPlaylist != null) {
+          ref
+              .read(mainViewModelProvider.notifier)
+              .recordTrackPlay(trackList[index], fromPlaylist: currentPlaylist);
+        }
       }
     });
 
     return null;
   }
 
-  void setPlaylist(List<Track> tracks) async {
+  void setPlaylist(List<Track> tracks, {Playlist? selectedPlaylist}) async {
+    currentPlaylist = selectedPlaylist;
     if (isShuffled) {
       toggleShuffle();
     }
@@ -65,12 +73,20 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
 
     playlist = ConcatenatingAudioSource(children: audioSources);
     await audioPlayer!.setAudioSource(playlist!);
+
+    if (selectedPlaylist != null) {
+      ref
+          .read(mainViewModelProvider.notifier)
+          .recordTrackPlay(tracks.first, fromPlaylist: selectedPlaylist);
+    }
+
     state = state?.copyWith(primary_color: state?.primary_color);
   }
 
   void playTrack(Track track) async {
     if (trackList.isEmpty || !trackList.contains(track)) {
       // Single track playback
+      currentPlaylist = null;
       if (isShuffled) {
         toggleShuffle();
       }
@@ -91,6 +107,7 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
       trackList = [track];
 
       await audioPlayer!.setAudioSource(playlist!);
+      ref.read(mainViewModelProvider.notifier).recordTrackPlay(track);
     } else {
       // Play track from existing playlist
       final trackIndex = trackList.indexOf(track);
