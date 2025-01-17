@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:client/common/utils/utils.dart';
 import 'package:client/common/theme/palette.dart';
 import 'package:client/common/widgets/widgets.dart';
 import 'package:client/common/providers/current_track_notifier.dart';
-import 'package:client/common/providers/recently_played_notifier.dart';
 import 'package:client/features/main/model/playlist_play_history.dart';
 import 'package:client/features/main/model/track_history_item.dart';
 import 'package:client/features/main/viewmodel/main_viewmodel.dart';
@@ -13,8 +13,24 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recentlyPlayed = ref.watch(recentlyPlayedNotifierProvider);
-    return SafeArea(
+    final recentlyPlayed =
+        ref.read(mainViewModelProvider.notifier).getRecentlyPlayed();
+    final currentTrack = ref.watch(currentTrackNotifierProvider);
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      decoration: currentTrack == null
+          ? null
+          : BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  hexToColor(currentTrack.primary_color),
+                  Palette.transparentColor,
+                ],
+                stops: const [0.0, 0.3],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

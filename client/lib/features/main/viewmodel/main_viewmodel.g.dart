@@ -45,7 +45,7 @@ final initGetTrendingPlaylistsProvider =
 // ignore: unused_element
 typedef InitGetTrendingPlaylistsRef
     = AutoDisposeFutureProviderRef<List<Playlist>>;
-String _$mainViewModelHash() => r'e9064324188261ebd0a804b0893b49b65a90aea6';
+String _$mainViewModelHash() => r'95fe4d472ecd4d4ac5b5cb98d51cedc28b0cba0c';
 
 /// See also [MainViewModel].
 @ProviderFor(MainViewModel)
