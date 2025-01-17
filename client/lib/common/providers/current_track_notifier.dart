@@ -21,6 +21,12 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
     audioPlayer = AudioPlayer();
     playlist = ConcatenatingAudioSource(children: []);
 
+    audioPlayer!.playingStream.listen((playing) {
+      isPlaying = playing;
+      // Notify listeners of state change
+      state = state?.copyWith(primary_color: state?.primary_color);
+    });
+
     // Listen for track completion to handle auto-play
     audioPlayer!.playerStateStream.listen((playerState) {
       if (playerState.processingState == ProcessingState.completed) {
@@ -49,6 +55,8 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
 
     return null;
   }
+
+  bool get playing => isPlaying;
 
   void setPlaylist(List<Track> tracks, {Playlist? selectedPlaylist}) async {
     currentPlaylist = selectedPlaylist;
@@ -125,8 +133,6 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
     } else {
       audioPlayer?.play();
     }
-    isPlaying = !isPlaying;
-    state = state?.copyWith(primary_color: state?.primary_color);
   }
 
   void seekToPosition(double position) {

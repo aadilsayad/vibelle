@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'current_track_notifier.dart';
+part of 'recently_played_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentTrackNotifierHash() =>
-    r'1199459eddbe247e1e09b84ef3edc13d4239aa2a';
+String _$recentlyPlayedNotifierHash() =>
+    r'24fe93bc7b5801fab09260b2321d5d12205160b4';
 
-/// See also [CurrentTrackNotifier].
-@ProviderFor(CurrentTrackNotifier)
-final currentTrackNotifierProvider =
-    AutoDisposeNotifierProvider<CurrentTrackNotifier, Track?>.internal(
-  CurrentTrackNotifier.new,
-  name: r'currentTrackNotifierProvider',
+/// See also [RecentlyPlayedNotifier].
+@ProviderFor(RecentlyPlayedNotifier)
+final recentlyPlayedNotifierProvider =
+    AutoDisposeNotifierProvider<RecentlyPlayedNotifier, List<dynamic>>.internal(
+  RecentlyPlayedNotifier.new,
+  name: r'recentlyPlayedNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$currentTrackNotifierHash,
+      : _$recentlyPlayedNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CurrentTrackNotifier = AutoDisposeNotifier<Track?>;
+typedef _$RecentlyPlayedNotifier = AutoDisposeNotifier<List<dynamic>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

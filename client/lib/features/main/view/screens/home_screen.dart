@@ -1,10 +1,11 @@
-import 'package:client/common/theme/palette.dart';
-import 'package:client/features/main/model/playlist_play_history.dart';
-import 'package:client/features/main/model/track_history_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:client/common/theme/palette.dart';
 import 'package:client/common/widgets/widgets.dart';
 import 'package:client/common/providers/current_track_notifier.dart';
+import 'package:client/common/providers/recently_played_notifier.dart';
+import 'package:client/features/main/model/playlist_play_history.dart';
+import 'package:client/features/main/model/track_history_item.dart';
 import 'package:client/features/main/viewmodel/main_viewmodel.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -12,8 +13,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recentlyPlayed =
-        ref.watch(mainViewModelProvider.notifier).getRecentlyPlayed();
+    final recentlyPlayed = ref.watch(recentlyPlayedNotifierProvider);
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(

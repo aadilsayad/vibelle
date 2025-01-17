@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:client/common/providers/current_user_notifier.dart';
+import 'package:client/common/providers/recently_played_notifier.dart';
 import 'package:client/features/main/model/track.dart';
 import 'package:client/features/main/model/playlist.dart';
 import 'package:client/features/main/repositories/main_remote_repository.dart';
@@ -63,11 +64,8 @@ class MainViewModel extends _$MainViewModel {
     return switchCase;
   }
 
-  List<dynamic> getRecentlyPlayed() {
-    return _mainLocalRepository.getRecentlyPlayed();
-  }
-
   void recordTrackPlay(Track track, {Playlist? fromPlaylist}) {
     _mainLocalRepository.recordTrackPlay(track, fromPlaylist: fromPlaylist);
+    ref.read(recentlyPlayedNotifierProvider.notifier).refresh();
   }
 }

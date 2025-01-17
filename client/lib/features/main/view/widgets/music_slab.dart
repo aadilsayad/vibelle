@@ -14,6 +14,7 @@ class MusicSlab extends ConsumerWidget {
     final currentTrack = ref.watch(currentTrackNotifierProvider);
     final currentTrackNotifier =
         ref.read(currentTrackNotifierProvider.notifier);
+    final isPlaying = currentTrackNotifier.playing;
     if (currentTrack == null) {
       return const SizedBox();
     }
@@ -122,9 +123,7 @@ class MusicSlab extends ConsumerWidget {
                     IconButton(
                       onPressed: currentTrackNotifier.togglePlaybackState,
                       icon: Icon(
-                        currentTrackNotifier.isPlaying
-                            ? Icons.pause
-                            : Icons.play_arrow,
+                        isPlaying ? Icons.pause : Icons.play_arrow,
                         size: 30,
                         color: Palette.whiteColor,
                       ),
