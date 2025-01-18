@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_public_notifier_properties
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:client/features/main/model/track.dart';
 import 'package:client/features/main/model/playlist.dart';
@@ -75,7 +76,15 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
         final trackStreamUrl = await ref
             .watch(mainViewModelProvider.notifier)
             .loadStreamUrl(track.id);
-        return AudioSource.uri(Uri.parse(trackStreamUrl));
+        return AudioSource.uri(
+          Uri.parse(trackStreamUrl),
+          tag: MediaItem(
+            id: track.id,
+            title: track.title,
+            artist: track.artist,
+            artUri: Uri.parse(track.artwork_url),
+          ),
+        );
       }),
     );
 
@@ -110,7 +119,17 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
           .loadStreamUrl(track.id);
 
       playlist = ConcatenatingAudioSource(
-        children: [AudioSource.uri(Uri.parse(trackStreamUrl))],
+        children: [
+          AudioSource.uri(
+            Uri.parse(trackStreamUrl),
+            tag: MediaItem(
+              id: track.id,
+              title: track.title,
+              artist: track.artist,
+              artUri: Uri.parse(track.artwork_url),
+            ),
+          ),
+        ],
       );
       trackList = [track];
 

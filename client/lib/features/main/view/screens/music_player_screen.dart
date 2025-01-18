@@ -52,6 +52,19 @@ class MusicPlayerScreen extends ConsumerWidget {
               ),
             ),
           ),
+          actions: [
+            Transform.translate(
+              offset: const Offset(-10, 12.5),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.more_vert,
+                  size: 35,
+                  color: Palette.whiteColor,
+                ),
+              ),
+            )
+          ],
         ),
         body: Column(
           children: [

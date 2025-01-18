@@ -38,7 +38,7 @@ class HomeScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
               child: SizedBox(
-                height: 280,
+                height: 300,
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200,
@@ -79,7 +79,7 @@ class HomeScreen extends ConsumerWidget {
                         padding: const EdgeInsets.only(right: 20),
                         decoration: BoxDecoration(
                           color: Palette.cardColor,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           children: [
