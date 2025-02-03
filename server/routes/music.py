@@ -3,6 +3,7 @@ import requests
 from fastapi import APIRouter, Depends, HTTPException
 from middlewares.auth_middleware import validate_auth_token
 from pydantic_schemas.stream_request import StreamRequest
+from utils.color_picker import extract_track_colors
 
 router = APIRouter()
 # get random host url from Audius to use for subsequent requests
@@ -26,8 +27,8 @@ def get_trending_tracks(auth_data=Depends(validate_auth_token)):
                 'title': track['title'],
                 'artist': track['user']['name'],
                 'artwork_url': track['artwork']['480x480'],
-                'primary_color': '5360FD',
-                'secondary_color': '000000',
+                'primary_color': '',
+                'secondary_color': '',
             }
         )
     return trending_tracks_compact
@@ -38,12 +39,23 @@ def get_stream_url(stream_request: StreamRequest, auth_data=Depends(validate_aut
     headers = {
         'Accept': 'application/json'
     }
+    track_response = requests.get(f'{host}/v1/tracks/{stream_request.track_id}', headers=headers)
+    track_details = track_response.json()['data']
+    artwork_url = track_details['artwork']['480x480']
+    colors = extract_track_colors(artwork_url)
+
+
     api_response = requests.get(f'{host}/v1/tracks/{stream_request.track_id}/stream', params={'no_redirect': True}, headers = headers)
     stream_data = api_response.json()
     if not stream_data:
         raise HTTPException(404, 'Track not found!')
     stream_url = stream_data['data']
-    return {'stream_url': stream_url}
+    
+    return {
+        'stream_url': stream_url,
+        'primary_color': colors['primary_color'],
+        'secondary_color': colors['secondary_color']
+    }
 
 
 @router.get('/playlists/trending')
@@ -69,8 +81,8 @@ def get_trending_playlists(auth_data=Depends(validate_auth_token)):
                         'title': track['title'],
                         'artist': track['user']['name'],
                         'artwork_url': track['artwork']['480x480'],
-                        'primary_color': '5360FD',
-                        'secondary_color': '000000'
+                        'primary_color': '',
+                        'secondary_color': '',
                     } for track in playlist['tracks']
                 ]
             }

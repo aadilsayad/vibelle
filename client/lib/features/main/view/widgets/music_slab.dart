@@ -71,9 +71,11 @@ class MusicSlab extends ConsumerWidget {
                               child: currentTrack.title.length > 25
                                   ? Marquee(
                                       text: currentTrack.title,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
+                                        color: hexToColor(
+                                            currentTrack.secondary_color),
                                       ),
                                       key: ValueKey(currentTrack.id),
                                       startAfter: const Duration(seconds: 1),
@@ -87,19 +89,21 @@ class MusicSlab extends ConsumerWidget {
                                     )
                                   : Text(
                                       currentTrack.title,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
+                                        color: hexToColor(
+                                            currentTrack.secondary_color),
                                       ),
                                     ),
                             ),
                             Text(
                               currentTrack.artist,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 overflow: TextOverflow.ellipsis,
-                                color: Palette.subtitleText,
+                                color: hexToColor(currentTrack.secondary_color),
                               ),
                               maxLines: 1,
                             ),
@@ -116,7 +120,7 @@ class MusicSlab extends ConsumerWidget {
                       onPressed: () {},
                       icon: Image.asset(
                         'assets/images/heart_unfilled.png',
-                        color: Palette.whiteColor,
+                        color: hexToColor(currentTrack.secondary_color),
                         width: 30,
                         height: 30,
                       ),
@@ -126,7 +130,7 @@ class MusicSlab extends ConsumerWidget {
                       icon: Icon(
                         isPlaying ? Icons.pause : Icons.play_arrow,
                         size: 30,
-                        color: Palette.whiteColor,
+                        color: hexToColor(currentTrack.secondary_color),
                       ),
                     ),
                   ],

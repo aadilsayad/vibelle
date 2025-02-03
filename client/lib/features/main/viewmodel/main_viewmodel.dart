@@ -50,17 +50,15 @@ class MainViewModel extends _$MainViewModel {
     return null;
   }
 
-  Future<String> loadStreamUrl(String trackId) async {
+  Future<Map<String, String>> loadStreamUrl(String trackId) async {
     final token = ref.watch(currentUserNotifierProvider)!.accessToken;
     final response = await _mainRemoteRepository.getTrackStreamUrl(
         token: token, trackId: trackId);
 
-    final switchCase = switch (response) {
+    return switch (response) {
       Left(value: final l) => throw l.message,
       Right(value: final r) => r,
     };
-
-    return switchCase;
   }
 
   List<dynamic> getRecentlyPlayed() {

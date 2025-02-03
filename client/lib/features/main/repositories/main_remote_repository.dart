@@ -52,7 +52,7 @@ class MainRemoteRepository {
     }
   }
 
-  Future<Either<AppFailure, String>> getTrackStreamUrl({
+  Future<Either<AppFailure, Map<String, String>>> getTrackStreamUrl({
     required String token,
     required String trackId,
   }) async {
@@ -76,7 +76,11 @@ class MainRemoteRepository {
         );
       }
 
-      return Right(responseBodyMap['stream_url'] as String);
+      return Right({
+        'stream_url': responseBodyMap['stream_url'],
+        'primary_color': responseBodyMap['primary_color'],
+        'secondary_color': responseBodyMap['secondary_color']
+      });
     } catch (e) {
       return Left(
         AppFailure(

@@ -73,11 +73,15 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
     trackList = tracks;
     final audioSources = await Future.wait(
       tracks.map((track) async {
-        final trackStreamUrl = await ref
+        final trackStreamData = await ref
             .watch(mainViewModelProvider.notifier)
             .loadStreamUrl(track.id);
+        track = track.copyWith(
+          primary_color: trackStreamData['primary_color'],
+          secondary_color: trackStreamData['secondary_color'],
+        );
         return AudioSource.uri(
-          Uri.parse(trackStreamUrl),
+          Uri.parse(trackStreamData['stream_url']!),
           tag: MediaItem(
             id: track.id,
             title: track.title,
@@ -114,14 +118,18 @@ class CurrentTrackNotifier extends _$CurrentTrackNotifier {
       state = state?.copyWith(primary_color: state?.primary_color);
 
       await audioPlayer?.stop();
-      final trackStreamUrl = await ref
+      final trackStreamData = await ref
           .watch(mainViewModelProvider.notifier)
           .loadStreamUrl(track.id);
+      track = track.copyWith(
+        primary_color: trackStreamData['primary_color'],
+        secondary_color: trackStreamData['secondary_color'],
+      );
 
       playlist = ConcatenatingAudioSource(
         children: [
           AudioSource.uri(
-            Uri.parse(trackStreamUrl),
+            Uri.parse(trackStreamData['stream_url']!),
             tag: MediaItem(
               id: track.id,
               title: track.title,

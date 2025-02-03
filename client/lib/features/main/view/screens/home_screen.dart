@@ -6,6 +6,7 @@ import 'package:client/common/widgets/widgets.dart';
 import 'package:client/common/providers/current_track_notifier.dart';
 import 'package:client/features/main/model/playlist_play_history.dart';
 import 'package:client/features/main/model/track_history_item.dart';
+import 'package:client/features/main/view/screens/playlist_screen.dart';
 import 'package:client/features/main/viewmodel/main_viewmodel.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -64,13 +65,20 @@ class HomeScreen extends ConsumerWidget {
                       title = item.playlist.title;
                       artworkUrl = item.playlist.artwork_url;
                       onTap = () {
-                        ref
-                            .read(currentTrackNotifierProvider.notifier)
-                            .setPlaylist(item.playlist.tracks,
-                                selectedPlaylist: item.playlist);
-                        ref
-                            .read(currentTrackNotifierProvider.notifier)
-                            .playTrack(item.playlist.tracks[0]);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) =>
+                                PlaylistScreen(playlist: item.playlist),
+                          ),
+                        );
+                        // ref
+                        //     .read(currentTrackNotifierProvider.notifier)
+                        //     .setPlaylist(item.playlist.tracks,
+                        //         selectedPlaylist: item.playlist);
+                        // ref
+                        //     .read(currentTrackNotifierProvider.notifier)
+                        //     .playTrack(item.playlist.tracks[0]);
                       };
                     }
                     return GestureDetector(
@@ -208,13 +216,20 @@ class HomeScreen extends ConsumerWidget {
                           final playlist = playlists[index];
                           return GestureDetector(
                             onTap: () {
-                              ref
-                                  .read(currentTrackNotifierProvider.notifier)
-                                  .setPlaylist(playlist.tracks,
-                                      selectedPlaylist: playlist);
-                              ref
-                                  .read(currentTrackNotifierProvider.notifier)
-                                  .playTrack(playlist.tracks[0]);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (ctx) =>
+                                      PlaylistScreen(playlist: playlist),
+                                ),
+                              );
+                              // ref
+                              //     .read(currentTrackNotifierProvider.notifier)
+                              //     .setPlaylist(playlist.tracks,
+                              //         selectedPlaylist: playlist);
+                              // ref
+                              //     .read(currentTrackNotifierProvider.notifier)
+                              //     .playTrack(playlist.tracks[0]);
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(left: 16),
